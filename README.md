@@ -137,3 +137,4 @@ You can scale the languages and the strings as you need. <br>
 You can also manage the current language state to switch between languages. <br>
 
 If you found this implementation too big, remember that without this package it would be even bigger 😜.
+Don't forget to star if you liked 😉.
