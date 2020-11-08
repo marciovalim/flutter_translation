@@ -8,12 +8,13 @@ Add to pubspec.yaml:
 
 <pre>
 dependencies:
-  flutter_translation: ^0.0.1
+  flutter_translation: ^0.0.5
   flutter_localizations:  
       sdk: flutter
 </pre>
 
 Create the translator classes: (app_translator.dart)
+
 <pre>
 abstract class AppTranslator extends ITranslator {
   const AppTranslator();
@@ -30,6 +31,7 @@ class EnTranslator extends AppTranslator {
 </pre>
 
 Create the AppLanguages class: (app_languages.dart)
+
 <pre>
 class AppLanguages extends ILanguages {
   AppLanguages.singleton();
@@ -55,11 +57,13 @@ class AppLanguages extends ILanguages {
   }
 }
 </pre>
+
 You will need to create a singleton from AppLanguages. I'll use getIt to do that. <br>
 Getting started with <a href="https://pub.dev/packages/get_it" target="blank">get_it</a>. <br>
-In you getIt setup: 
+In you getIt setup:
+
 <pre>
-  
+  getIt.registerSingleton&ltAppLanguages&gt(AppLanguages.singleton());
 </pre>
 
 Create the localization and the delegate classes: (app_localizations.dart)
@@ -89,8 +93,6 @@ class AppLocalizationsDelegate
   }
 }
 </pre>
-
-
 
 Your setup is done! <br>
 Now you just need to start using it, like so:

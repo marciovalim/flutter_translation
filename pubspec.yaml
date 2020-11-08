@@ -1,6 +1,6 @@
 name: flutter_translation
 description: A package to help with Flutter translation.
-version: 0.0.3
+version: 0.0.6
 homepage: https://github.com/marciovalim/flutter_translation
 
 environment:
