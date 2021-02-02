@@ -134,6 +134,14 @@ getIt.registerFactoryParam&ltAppTranslator, BuildContext, Object&gt(
 );
 </pre>
 
+or simply
+
+<pre>
+void findTranslator(BuildContext context){
+  return Localizations.of(context, AppLocalizations).translator;
+}
+</pre>
+
 Congratulations! You've added translation support to your app. <br>
 You can scale the languages and the strings as you need. <br>
 You can also manage the current language state to switch between languages. <br>
