@@ -6,16 +6,16 @@ A package that helps eliminate boilerplate code when implementing translations i
 
 Add to pubspec.yaml:
 
-<pre>
+```yaml
 dependencies:
   flutter_translation: ^0.0.5
   flutter_localizations:  
       sdk: flutter
-</pre>
+```
 
-Create the translator classes: (app_translator.dart)
+Create the translator classes: ``app_translator.dart``
 
-<pre>
+```dart
 abstract class AppTranslator extends ITranslator {
   const AppTranslator();
 
@@ -28,11 +28,11 @@ class PtTranslator extends AppTranslator {
 class EnTranslator extends AppTranslator {
   String get title => 'Title';
 }
-</pre>
+```
 
-Create the AppLanguages class: (app_languages.dart)
+Create the AppLanguages class: ``app_languages.dart``
 
-<pre>
+```dart
 class AppLanguages extends ILanguages {
   AppLanguages.singleton();
 
@@ -41,7 +41,7 @@ class AppLanguages extends ILanguages {
       languages.firstWhere((lang) => lang.code == 'en');
 
   @override
-  List&ltLanguageEntity&gt createLanguages() {
+  List<LanguageEntity> createLanguages() {
     return [
       LanguageEntity(
         code: 'pt',
@@ -56,91 +56,94 @@ class AppLanguages extends ILanguages {
     ];
   }
 }
-</pre>
+```
 
 You will need to create a singleton from AppLanguages. I'll use getIt to do that. <br>
 Getting started with <a href="https://pub.dev/packages/get_it" target="blank">get_it</a>. <br>
 In you getIt setup:
 
-<pre>
-  getIt.registerSingleton&ltAppLanguages&gt(AppLanguages.singleton());
-</pre>
+```dart
+  getIt.registerSingleton<AppLanguages>(AppLanguages.singleton());
+```
 
-Create the localization and the delegate classes: (app_localizations.dart)
+Create the localization, and the delegate classes: ``app_localizations.dart``
 
-<pre>
-class AppLocalizations extends ILocalizations&ltAppTranslator&gt {
+```dart
+class AppLocalizations extends ILocalizations<AppTranslator> {
   AppLocalizations.singleton(Locale locale) : super(locale);
 
   @override
   AppTranslator getTranslator(String languageCode) {
     throw UnimplementedError();
-    // something like: getIt&ltAppLanguages&gt().findByCode(languageCode).translator
+    // something like: getIt<AppLanguages>().findByCode(languageCode).translator
   }
 }
   
 class AppLocalizationsDelegate
-    extends ILocalizationsDelegate&ltAppLocalizations&gt {
+    extends ILocalizationsDelegate<AppLocalizations> {
   const AppLocalizationsDelegate();
 
   @override
   // here is where we need dependency injection
-  List&ltLanguageEntity&gt getLanguages() => throw UnimplementedError(); // something like: getIt&ltAppLanguages&gt().languages;
+  List<LanguageEntity> getLanguages() => throw UnimplementedError(); // something like: getIt<AppLanguages>().languages;
 
   @override
-  Future&ltAppLocalizations&gt load(Locale locale) async {
+  Future<AppLocalizations> load(Locale locale) async {
     return AppLocalizations.singleton(locale); // create AppLocalizations instance
   }
 }
-</pre>
+```
 
 Your setup is done! <br>
 Now you just need to start using it, like so:
 
-<pre>
+
+```dart
 import 'package:flutter_translation/flutter_translation.dart';
 
 return MaterialApp(
-  supportedLocales: getIt&ltAppLanguages&gt()
+  supportedLocales: getIt<AppLanguages>()
                   .languages
                   .map((lang) => lang.toLocale()),
-  locale: getIt&ltAppLanguages&gt().defaultLanguage.toLocale(),
+  locale: getIt<AppLanguages>().defaultLanguage.toLocale(),
   localizationsDelegates: [
     AppLocalizationsDelegate(),
     GlobalMaterialLocalizations.delegate, 
     GlobalWidgetsLocalizations.delegate, 
   ],
 );
-</pre>
+```
+
 
 And then use to translate what you want:
 
-<pre>
-  final translator = getIt.get&ltAppTranslator&gt(param1: context);
+```dart
+  final translator = getIt.get<AppTranslator>(param1: context);
   return Scaffold(
     body: Center(
       child: Text(translator.title),
     ),
   );
-</pre>
+```
+
 
 Note: I'm using getIt to deal with dependency injection, but you can use whatever you prefer to do this. <br>
 If you want to use getIt like me, add this to your getIt setup function:
 
-<pre>
-getIt.registerFactoryParam&ltAppTranslator, BuildContext, Object&gt(
+```dart
+getIt.registerFactoryParam<AppTranslator, BuildContext, Object>(
   (context, nullParam) =>
       Localizations.of(context, AppLocalizations).translator,
 );
-</pre>
+```
 
 or simply
 
-<pre>
+```dart
 void findTranslator(BuildContext context){
   return Localizations.of(context, AppLocalizations).translator;
 }
-</pre>
+```
 
 Congratulations! You've added translation support to your app. <br>
 You can scale the languages and the strings as you need. <br>
