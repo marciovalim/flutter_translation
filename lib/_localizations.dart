@@ -4,7 +4,7 @@ import './_language_entity.dart';
 import '_translator.dart';
 
 abstract class ILocalizations<TranslatorType extends ITranslator> {
-  TranslatorType translator;
+  TranslatorType? translator;
   Locale locale;
 
   ILocalizations(this.locale) {

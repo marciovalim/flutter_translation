@@ -1,7 +1,7 @@
 import './_language_entity.dart';
 
 abstract class ILanguages {
-  List<LanguageEntity> languages;
+  late List<LanguageEntity> languages;
 
   ILanguages() {
     languages = createLanguages();

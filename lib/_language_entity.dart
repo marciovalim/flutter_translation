@@ -8,9 +8,9 @@ class LanguageEntity {
   final ITranslator translator;
 
   const LanguageEntity({
-    @required this.code,
-    @required this.name,
-    @required this.translator,
+    required this.code,
+    required this.name,
+    required this.translator,
   });
 }
 
